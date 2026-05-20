@@ -1,0 +1,21 @@
+# Archivos que NO se suben al hosting (rsync --exclude-from).
+node_modules/
+tests/
+test-results/
+playwright-report/
+playwright.config.js
+scripts/
+.git/
+.github/
+.vscode/
+.claude/
+.env
+.env.example
+.deployignore
+.gitignore
+package.json
+package-lock.json
+BRIEF.md
+PROCESO.md
+CLAUDE.md
+proyectos/

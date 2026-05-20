@@ -1,0 +1,18 @@
+# Per-project .htaccess para invitaciones servidas como subcarpeta de
+# momentuminvitaciones.com. Conviven con el WordPress del root sin conflicto
+# porque mod_rewrite per-directory no hereda las reglas del padre por defecto.
+
+RewriteEngine On
+
+# URL limpia para el save the date: /save-the-date → /save-the-date.html
+RewriteRule ^save-the-date/?$ save-the-date.html [L]
+
+# URL limpia para la invitación al baile (post-cena) de XV: /despues-12 → /despues-12.html
+RewriteRule ^despues-12/?$ despues-12.html [L]
+
+# URLs limpias para las variantes teen/adulto de XV (cada una con su payload teen_adulto y su preview)
+RewriteRule ^teen/?$ teen.html [L]
+RewriteRule ^adulto/?$ adulto.html [L]
+
+# Panel privado para la quinceañera: copia al portapapeles los links de cada variante
+RewriteRule ^panel/?$ panel.html [L]

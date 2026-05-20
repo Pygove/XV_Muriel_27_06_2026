@@ -1,0 +1,32 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   TEMA — editá solo este archivo para cambiar la estética de la invitación.
+   styles.css contiene el layout y no debe modificarse entre proyectos.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Tipografías ── */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap');
+
+:root {
+  /* Paleta */
+  --bg:           #faf8f5;
+  --bg-soft:      #f3efe9;
+  --surface:      #ffffff;
+  --text:         #1a1714;
+  --text-soft:    #5a534e;
+  --text-faint:   #9a9088;
+  --accent:       #b5884a;
+  --accent-light: #d4ab72;
+  --accent-dark:  #7a5a28;
+  --border:       #e0d8cc;
+  --border-soft:  #ede8e0;
+
+  /* Tipografías */
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body:    'Lato', system-ui, sans-serif;
+}
+
+/* Animación de fondo de la portada — usa colores del tema */
+@keyframes gatePulse {
+  0%, 100% { background-color: #1a1714; }
+  50%       { background-color: #24201c; }
+}

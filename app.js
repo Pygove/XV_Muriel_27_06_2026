@@ -6,36 +6,42 @@ const CONFIG = {
   // app.js detecta cuál se cargó por el marker en el DOM (ver initForm).
 
   // Identidad
-  nombre: 'Nombre del/la Festejado/a',   // Para casamiento: 'Nombre & Nombre'
-  fechaTexto: 'DD · Mes · AAAA',
+  nombre: 'Muriel',   // Para casamiento: 'Nombre & Nombre'
+  fechaTexto: '27 · Junio · 2026',
 
   // Countdown target
-  fechaISO: '2026-01-01T21:00:00-03:00',
+  fechaISO: '2026-06-27T21:00:00-03:00',
 
   // Lugar
-  salon: 'Salón Puertas del Sol - La Aventura',
+  salon: 'Salón Los Jesuitas - La Aventura',
   direccion: 'Av. Zapiola 965 - Posadas, Misiones',
-  googleMapsUrl: 'https://maps.google.com/?q=',
+  googleMapsUrl: 'https://maps.app.goo.gl/ZkdUe86bkT1dpZ8d8',
 
   // Música (bumpear ?v= si se reemplaza el archivo después de deploy)
-  musicUrl: 'music.mp3?v=1',
+  musicUrl: 'music.mp3',
 
   // Galería: lista de fotos. Vacía → sección oculta.
   gallery: [
-    // { src: 'fotos/01.jpg', alt: 'Descripción opcional' },
+    { src: 'fotos/01.webp'},
+    { src: 'fotos/02.webp'},
+    { src: 'fotos/03.webp'},
+    { src: 'fotos/04.webp'},
+    { src: 'fotos/05.webp'},
+    { src: 'fotos/06.webp'},
+    { src: 'fotos/07.webp'},
   ],
 
   // Webhook de n8n (appendea cada submission a la planilla del evento)
   webhookUrl: 'https://n8n.example.com/webhook/XXXXXXX',
-  eventId: 'evento-001',
+  eventId: '1gJ-YxITbdFgRvR3wLK1NawutRI-7APLh8e1cCnIaOcY',
 
   // Dress code
   dresscode: 'Elegante',
 
   // Regalos
-  alias: 'alias.ejemplo',
-  cbu: '0000000000000000000000',
-  banco: 'Nombre del Banco',
+  alias: 'Jolie - Bolívar 1912 casi Colón',
+  cbu: 'Garcia Joyas - Bolivar 2045',
+  banco: 'Queen Juana- Cordoba 2123',
 };
 // ─────────────────────────────────────────────────────────────────────────────
 

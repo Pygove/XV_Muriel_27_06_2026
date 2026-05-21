@@ -26,24 +26,24 @@
 Recopilar del cliente antes de arrancar:
 
 **Evento**
-- [ ] Tipo: XV años o casamiento
-- [ ] Nombre/s (con tildes y mayúsculas correctas)
-- [ ] Fecha, hora y timezone
-- [ ] Nombre del salón, dirección y link de Google Maps
-- [ ] Itinerario completo (horarios y descripción de cada momento)
-- [ ] Dress code
-- [ ] Datos bancarios: banco, alias, CBU
-- [ ] *(Solo XV)* Variante/s a crear: teen, adulto, o ambas (se sirven desde la misma carpeta en URLs distintas)
+- [X] Tipo: XV años o casamiento
+- [X] Nombre/s (con tildes y mayúsculas correctas)
+- [X] Fecha, hora y timezone
+- [X] Nombre del salón, dirección y link de Google Maps
+- [X] Itinerario completo (horarios y descripción de cada momento)
+- [X] Dress code
+- [X] Datos bancarios: banco, alias, CBU
+- [X] *(Solo XV)* Variante/s a crear: teen, adulto, o ambas (se sirven desde la misma carpeta en URLs distintas)
 
 **Multimedia**
-- [ ] Canción (MP3)
-- [ ] Fotos para la galería (hasta 9)
-- [ ] Imagen de preview para redes (og:image), 1200×630 px
+- [X] Canción (MP3)
+- [X] Fotos para la galería (hasta 9)
+- [X] Imagen de preview para redes (og:image), 1200×630 px
 
 **Diseño**
-- [ ] Paleta de colores, referencias visuales, mood
-- [ ] Tipografías o palabras clave del estilo
-- [ ] Elementos decorativos deseados y no deseados
+- [X] Paleta de colores, referencias visuales, mood
+- [X] Tipografías o palabras clave del estilo
+- [X] Elementos decorativos deseados y no deseados
 
 ---
 

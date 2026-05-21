@@ -68,7 +68,15 @@ const args = [
 ].filter(Boolean);
 
 console.log(`${go ? '➤ Subiendo' : '➤ DRY-RUN'}: ${DEPLOY_HOST}:${DEPLOY_PATH}`);
+console.log(`  rsync ${args.join(' ')}\n`);
 const r = spawnSync('rsync', args, { cwd: ROOT, stdio: 'inherit' });
 
-if (r.status !== 0) process.exit(r.status || 1);
+if (r.error) {
+  console.error(`\n✗ No se pudo ejecutar rsync: ${r.error.message}`);
+  process.exit(1);
+}
+if (r.status !== 0) {
+  console.error(`\n✗ rsync terminó con código ${r.status}`);
+  process.exit(r.status || 1);
+}
 if (!go) console.log('\nDry-run OK. Repetí con: npm run deploy -- --go');

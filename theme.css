@@ -4,29 +4,497 @@
    ═══════════════════════════════════════════════════════════════════════════ */
 
 /* ── Tipografías ── */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Montserrat:wght@200;300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap');
 
 :root {
-  /* Paleta */
-  --bg:           #faf8f5;
-  --bg-soft:      #f3efe9;
-  --surface:      #ffffff;
-  --text:         #1a1714;
-  --text-soft:    #5a534e;
-  --text-faint:   #9a9088;
-  --accent:       #b5884a;
-  --accent-light: #d4ab72;
-  --accent-dark:  #7a5a28;
-  --border:       #e0d8cc;
-  --border-soft:  #ede8e0;
+  /* Paleta — Noche estrellada mágica y lujosa */
+  --bg:           #050714; /* Azul noche ultra-profundo, casi negro */
+  --bg-soft:      #0a0d1e; /* Azul noche suave para capas superiores */
+  --surface:      #10152b; /* Azul marino cósmico para contenedores */
+  --text:         #fdfbf7; /* Blanco cálido / crema de alto contraste */
+  --text-soft:    #e0d9cc; /* Crema suave para textos secundarios */
+  --text-faint:   #8a8374; /* Bronce tenue para metadatos o detalles menores */
+  --accent:       #d4a853; /* Oro clásico */
+  --accent-light: #f3d693; /* Destellos dorados brillantes / oro claro */
+  --accent-dark:  #9e772d; /* Oro viejo / bronce profundo */
+  --border:       #1b223c; /* Borde azul marino oscuro */
+  --border-soft:  #2f3b61; /* Borde más visible para enfoque o separación */
 
-  /* Tipografías */
-  --font-display: 'Playfair Display', Georgia, serif;
-  --font-body:    'Lato', system-ui, sans-serif;
+  /* Tipografías sugeridas y ampliadas */
+  --font-display: 'Cinzel', 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  --font-body:    'Montserrat', 'Lato', system-ui, sans-serif;
+  
+  /* Radios y transiciones */
+  --radius-sm:    4px;
+  --radius-md:    8px;
+  --radius-lg:    16px;
+  --transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Fondos para secciones de contraste (portada, gate, footer) */
+  --bg-emphasis:      var(--bg);
+  /* Hero semi-transparente para que se vea el fondo estrellado */
+  --hero-bg:          rgba(5, 7, 20, 0.4);
+  /* Botones primarios */
+  --btn-primary-bg:   var(--accent);
+  --btn-primary-text: var(--bg);
 }
 
-/* Animación de fondo de la portada — usa colores del tema */
+/* Pulso sutil en la portada de entrada */
 @keyframes gatePulse {
-  0%, 100% { background-color: #1a1714; }
-  50%       { background-color: #24201c; }
+  0%, 100% { box-shadow: inset 0 0 60px rgba(212, 168, 83, 0); }
+  50%      { box-shadow: inset 0 0 80px rgba(212, 168, 83, 0.08); }
+}
+
+/* ── Fondo estrellado animado con Parallax Cósmico (3 capas) ── */
+.starry-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  /* Capa profunda: Nebulosas cósmicas y estrellas ultra-pequeñas (fijas/drift ultra lento) */
+  background:
+    radial-gradient(circle at 15% 25%, oklch(14% 0.04 250 / 0.5) 0%, transparent 55%),
+    radial-gradient(circle at 85% 75%, oklch(12% 0.03 280 / 0.4) 0%, transparent 65%),
+    radial-gradient(circle at 50% 50%, oklch(10% 0.02 240 / 0.3) 0%, transparent 75%),
+    /* Estrellas de fondo micro */
+    radial-gradient(1px 1px at 45px 65px, var(--text-soft), transparent),
+    radial-gradient(1px 1px at 180px 115px, rgba(245, 240, 232, 0.3), transparent),
+    radial-gradient(1px 1px at 350px 240px, rgba(212, 168, 83, 0.25), transparent),
+    radial-gradient(1.2px 1.2px at 510px 80px, var(--text-soft), transparent),
+    radial-gradient(1px 1px at 680px 310px, rgba(245, 240, 232, 0.3), transparent),
+    radial-gradient(1px 1px at 840px 190px, rgba(212, 168, 83, 0.25), transparent),
+    radial-gradient(1px 1px at 980px 420px, var(--text-soft), transparent),
+    radial-gradient(1.5px 1.5px at 1150px 150px, rgba(245, 240, 232, 0.4), transparent),
+    radial-gradient(1px 1px at 1350px 380px, rgba(212, 168, 83, 0.2), transparent),
+    radial-gradient(1px 1px at 1550px 220px, var(--text-soft), transparent),
+    var(--bg);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 1200px 500px, 1200px 500px, 1200px 500px, 1200px 500px, 1200px 500px, 1200px 500px, 1200px 500px, 1200px 500px, 1200px 500px, 1200px 500px;
+  animation: starDriftSlow 240s linear infinite;
+}
+
+/* Capa media de Parallax: Estrellas medianas con brillo sutil y drift moderado */
+.starry-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(2px 2px at 120px 180px, var(--text), transparent),
+    radial-gradient(1.5px 1.5px at 340px 390px, rgba(212, 168, 83, 0.6), transparent),
+    radial-gradient(2px 2px at 580px 120px, var(--text-soft), transparent),
+    radial-gradient(1.5px 1.5px at 720px 450px, rgba(253, 251, 247, 0.5), transparent),
+    radial-gradient(2px 2px at 910px 290px, rgba(212, 168, 83, 0.6), transparent),
+    radial-gradient(1.5px 1.5px at 1100px 210px, var(--text-soft), transparent),
+    radial-gradient(2px 2px at 1380px 480px, rgba(212, 168, 83, 0.5), transparent),
+    radial-gradient(1.5px 1.5px at 1520px 90px, var(--text), transparent);
+  background-size: 1200px 600px;
+  animation: starDriftMedium 160s linear infinite, twinkleMedium 8s ease-in-out infinite alternate;
+  opacity: 0.75;
+}
+
+/* Capa cercana de Parallax: Estrellas brillantes y destellos dorados con drift rápido */
+.starry-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(2.5px 2.5px at 220px 320px, var(--text), transparent),
+    radial-gradient(3px 3px at 510px 210px, var(--accent-light), transparent),
+    radial-gradient(2px 2px at 830px 520px, var(--text), transparent),
+    radial-gradient(3px 3px at 1250px 340px, var(--accent-light), transparent),
+    radial-gradient(2px 2px at 1450px 180px, var(--text-soft), transparent);
+  background-size: 1200px 700px;
+  animation: starDriftFast 100s linear infinite, twinkleFast 5s ease-in-out infinite alternate;
+  opacity: 0.85;
+}
+
+@keyframes starDriftSlow {
+  from { background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0; }
+  to   { background-position: 0 0, 0 0, 0 0, -1200px 500px, -1200px 500px, -1200px 500px, -1200px 500px, -1200px 500px, -1200px 500px, -1200px 500px, -1200px 500px, -1200px 500px, -1200px 500px; }
+}
+
+@keyframes starDriftMedium {
+  from { background-position: 0 0; }
+  to   { background-position: -1200px 600px; }
+}
+
+@keyframes starDriftFast {
+  from { background-position: 0 0; }
+  to   { background-position: -1200px 700px; }
+}
+
+@keyframes twinkleMedium {
+  0%, 100% { opacity: 0.4; }
+  50%       { opacity: 0.95; }
+}
+
+@keyframes twinkleFast {
+  0%, 100% { opacity: 0.3; }
+  50%       { opacity: 1; }
+}
+
+/* ── Partículas doradas flotantes (Polvo de Estrellas Ultra Lento) ── */
+.gold-particles {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.gold-particles::before,
+.gold-particles::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+}
+
+/* Polvo de estrellas mediano (flotación super lenta) */
+.gold-particles::before {
+  width: 4px;
+  height: 4px;
+  background: var(--accent);
+  box-shadow:
+    150px 80px 0 -1px rgba(212, 168, 83, 0.5),
+    320px 240px 0 0px rgba(232, 200, 120, 0.4),
+    580px 140px 0 -2px rgba(212, 168, 83, 0.3),
+    740px 320px 0 1px rgba(232, 200, 120, 0.6),
+    220px 450px 0 0px rgba(212, 168, 83, 0.4),
+    480px 520px 0 -1px rgba(212, 168, 83, 0.7),
+    680px 410px 0 1px rgba(232, 200, 120, 0.3),
+    890px 360px 0 0px rgba(212, 168, 83, 0.4),
+    90px 380px 0 -1px rgba(232, 200, 120, 0.5);
+  animation: goldFloatSlow 48s ease-in-out infinite;
+  filter: blur(0.5px);
+}
+
+/* Polvo de estrellas fino (flotación aún más lenta con retraso) */
+.gold-particles::after {
+  width: 2px;
+  height: 2px;
+  background: var(--accent-light);
+  box-shadow:
+    90px 160px 0 0px rgba(212, 168, 83, 0.4),
+    270px 60px 0 -1px rgba(232, 200, 120, 0.3),
+    490px 290px 0 1px rgba(212, 168, 83, 0.3),
+    640px 190px 0 0px rgba(232, 200, 120, 0.5),
+    810px 440px 0 -1px rgba(212, 168, 83, 0.6),
+    170px 310px 0 1px rgba(232, 200, 120, 0.2),
+    390px 490px 0 0px rgba(212, 168, 83, 0.5),
+    590px 370px 0 -1px rgba(212, 168, 83, 0.4),
+    910px 270px 0 1px rgba(232, 200, 120, 0.3);
+  animation: goldFloatSlower 64s ease-in-out 8s infinite;
+  filter: blur(0.2px);
+}
+
+@keyframes goldFloatSlow {
+  0% {
+    transform: translateY(105vh) translateX(0) scale(0.8);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.75;
+  }
+  50% {
+    transform: translateY(50vh) translateX(25px) scale(1.1);
+    opacity: 0.9;
+  }
+  90% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-5vh) translateX(-15px) scale(0.8);
+    opacity: 0;
+  }
+}
+
+@keyframes goldFloatSlower {
+  0% {
+    transform: translateY(105vh) translateX(0) scale(1);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.6;
+  }
+  60% {
+    transform: translateY(40vh) translateX(-30px) scale(0.9);
+    opacity: 0.8;
+  }
+  85% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(-5vh) translateX(20px) scale(1.2);
+    opacity: 0;
+  }
+}
+
+/* ── Brillo y Titileo (Twinkling) individual ── */
+@keyframes twinkle {
+  0%, 100% {
+    opacity: 0.35;
+    filter: drop-shadow(0 0 1px rgba(243, 214, 147, 0.2));
+  }
+  50% {
+    opacity: 1;
+    filter: drop-shadow(0 0 6px var(--accent-light));
+  }
+}
+
+.star-twinkle {
+  animation: twinkle 4s ease-in-out infinite;
+}
+
+/* Brillo dorado celestial suave */
+.gold-glow {
+  box-shadow: 0 0 25px rgba(212, 168, 83, 0.2), 0 0 50px rgba(212, 168, 83, 0.08);
+}
+
+/* ── Elementos Ornamentales Exclusivos (Estilo Invitación de Gala) ── */
+
+/* Línea decorativa con destello dorado */
+.gold-rule {
+  position: relative;
+  height: 1px;
+  max-width: 240px;
+  background: linear-gradient(90deg, transparent, var(--accent) 50%, transparent);
+  margin: 1.75rem auto;
+}
+
+.gold-rule::before {
+  content: '✦';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--accent-light);
+  font-size: 0.85rem;
+  background: var(--bg-soft);
+  padding: 0 8px;
+  font-family: var(--font-display);
+}
+
+/* Divisor Celestial con estrella de 4 puntas */
+.celestial-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  margin: 2.5rem auto;
+  max-width: 350px;
+}
+
+.celestial-divider::before,
+.celestial-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent) 50%, transparent);
+}
+
+.celestial-divider-star {
+  width: 14px;
+  height: 14px;
+  background: var(--accent-light);
+  clip-path: polygon(50% 0%, 58% 42%, 100% 50%, 58% 58%, 50% 100%, 42% 58%, 0% 50%, 42% 42%);
+  animation: pulseTwinkle 3.5s ease-in-out infinite;
+}
+
+@keyframes pulseTwinkle {
+  0%, 100% {
+    transform: scale(0.85) rotate(0deg);
+    opacity: 0.65;
+    filter: drop-shadow(0 0 2px var(--accent-light));
+  }
+  50% {
+    transform: scale(1.15) rotate(90deg);
+    opacity: 1;
+    filter: drop-shadow(0 0 8px var(--accent-light));
+  }
+}
+
+/* Contenedor tipo Tarjeta de Gala */
+.celestial-card {
+  position: relative;
+  background: rgba(10, 13, 26, 0.72);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(212, 168, 83, 0.25);
+  border-radius: var(--radius-md);
+  padding: 2.5rem 2rem;
+  box-shadow:
+    0 20px 45px rgba(0, 0, 0, 0.65),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+    0 0 30px rgba(212, 168, 83, 0.06);
+  transition: var(--transition-smooth);
+}
+
+.celestial-card:hover {
+  border-color: rgba(212, 168, 83, 0.4);
+  box-shadow:
+    0 24px 50px rgba(0, 0, 0, 0.75),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 0 40px rgba(212, 168, 83, 0.12);
+}
+
+/* Marco decorativo interno clásico */
+.celestial-border {
+  position: relative;
+}
+
+.celestial-border::before {
+  content: '';
+  position: absolute;
+  inset: -12px;
+  border: 1px solid rgba(212, 168, 83, 0.12);
+  border-radius: calc(var(--radius-md) - 4px);
+  pointer-events: none;
+}
+
+/* Título o texto con efecto oro metálico brillante */
+.gold-text {
+  background: linear-gradient(135deg, #fefdfb 0%, #ecd49d 40%, #d4a853 80%, #a47b31 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: var(--accent); /* Fallback */
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-shadow: 0 0 15px rgba(212, 168, 83, 0.08);
+}
+
+/* Medalla o badge celestial (para iconos o iniciales) */
+.celestial-badge {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  border: 1px solid rgba(212, 168, 83, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  background: rgba(16, 21, 43, 0.6);
+  box-shadow:
+    0 0 20px rgba(212, 168, 83, 0.15),
+    inset 0 0 8px rgba(212, 168, 83, 0.05);
+  position: relative;
+  transition: var(--transition-smooth);
+}
+
+.celestial-badge:hover {
+  border-color: var(--accent-light);
+  box-shadow: 0 0 25px rgba(212, 168, 83, 0.3);
+}
+
+.celestial-badge-icon {
+  width: 12px;
+  height: 12px;
+  background: var(--accent-light);
+  clip-path: polygon(50% 0%, 58% 42%, 100% 50%, 58% 58%, 50% 100%, 42% 58%, 0% 50%, 42% 42%);
+  animation: pulseTwinkle 3s ease-in-out infinite;
+}
+
+/* Crescent Moon dibujada en puro CSS para uso ornamental */
+.crescent-moon-icon {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  box-shadow: 4px 4px 0 0 var(--accent-light);
+  transform: rotate(-25deg) scale(0.9);
+  margin-top: -6px;
+  margin-left: -6px;
+}
+
+/* Estrella decorativa al costado de encabezados */
+.heading-sparkle {
+  position: relative;
+  display: inline-block;
+}
+
+.heading-sparkle::before,
+.heading-sparkle::after {
+  content: '';
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  background: var(--accent-light);
+  clip-path: polygon(50% 0%, 58% 42%, 100% 50%, 58% 58%, 50% 100%, 42% 58%, 0% 50%, 42% 42%);
+  animation: pulseTwinkle 4s ease-in-out infinite;
+}
+
+.heading-sparkle::before {
+  left: -22px;
+  top: 52%;
+  transform: translateY(-50%);
+  animation-delay: 0.5s;
+}
+
+.heading-sparkle::after {
+  right: -22px;
+  top: 52%;
+  transform: translateY(-50%);
+  animation-delay: 2s;
+}
+
+/* Botón Lujoso de Gala */
+.celestial-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--bg);
+  background: linear-gradient(135deg, var(--accent-dark) 0%, var(--accent) 50%, var(--accent-light) 100%);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 0.95rem 2.25rem;
+  box-shadow: 0 4px 20px rgba(212, 168, 83, 0.25);
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
+}
+
+.celestial-btn::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 20%;
+  height: 200%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  transform: rotate(30deg);
+  transition: none;
+}
+
+.celestial-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(212, 168, 83, 0.4);
+}
+
+.celestial-btn:hover::after {
+  left: 140%;
+  transition: left 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.celestial-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 10px rgba(212, 168, 83, 0.2);
+}
+
+/* ── Mejoras de Tipografía y Espaciado para Modo Oscuro Fino ── */
+p, span, li {
+  font-weight: 300; /* Peso ligero y elegante */
+  letter-spacing: 0.03em;
+  line-height: 1.65;
+}
+
+h1, h2, h3, h4 {
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 500;
 }

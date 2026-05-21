@@ -32,7 +32,7 @@ body.gate-active { overflow: hidden; }
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--text);
+  background: var(--bg-emphasis, var(--text));
   cursor: pointer;
   animation: gatePulse 6s ease-in-out infinite;
 }
@@ -117,7 +117,7 @@ body.gate-active { overflow: hidden; }
   justify-content: center;
   text-align: center;
   padding: var(--section-pad);
-  background: var(--text);
+  background: var(--hero-bg, var(--text));
   color: #fff;
   position: relative;
   overflow: hidden;
@@ -238,8 +238,8 @@ section { padding: var(--section-pad); }
   align-items: center;
   gap: .5rem;
   padding: .7rem 1.6rem;
-  background: var(--text);
-  color: #fff;
+  background: var(--btn-primary-bg, var(--text));
+  color: var(--btn-primary-text, #fff);
   font-family: var(--font-body);
   font-size: .78rem;
   letter-spacing: .15em;
@@ -372,8 +372,8 @@ section { padding: var(--section-pad); }
 .btn-submit {
   margin-top: .4rem;
   padding: 1rem 2.4rem;
-  background: var(--text);
-  color: #fff;
+  background: var(--btn-primary-bg, var(--text));
+  color: var(--btn-primary-text, #fff);
   border: none;
   border-radius: var(--radius);
   font-family: var(--font-body);
@@ -401,7 +401,7 @@ section { padding: var(--section-pad); }
 footer {
   padding: 3.5rem clamp(1.25rem, 6vw, 3rem);
   text-align: center;
-  background: var(--text);
+  background: var(--bg-emphasis, var(--text));
   color: rgba(255,255,255,.45);
 }
 .footer-name { font-family: var(--font-display); font-size: 1rem; color: rgba(255,255,255,.75); margin-bottom: .3rem; letter-spacing: .08em; }

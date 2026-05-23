@@ -18,7 +18,17 @@
 
   // ── Configuración ────────────────────────────────────────────────────────
   const TRIGGER_TEXT_RE = /ingresar|entrar|abrir invitaci/i; // texto del botón
-  const STREAK_COUNT = 140;                                  // cantidad de estrellas
+
+  // Detección de mobile para versión liviana (Android sufre con muchos streaks
+  // animados + filters al mismo tiempo).
+  const isMobile = window.matchMedia('(max-width: 820px)').matches
+    || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+  // En Android específicamente bajamos aún más (los Chrome móviles sufren
+  // con muchas animaciones DOM simultáneas).
+  const isAndroid = /Android/i.test(navigator.userAgent);
+
+  const STREAK_COUNT = isAndroid ? 35 : (isMobile ? 55 : 140);
   const WARP_DURATION_MS = 2000;                             // duración del viaje
   const FLASH_AT_MS = 1700;                                  // cuándo arranca el flash blanco
 
@@ -108,17 +118,25 @@
       document.body.classList.add('warp-ending');
     }, FLASH_AT_MS);
 
-    // Fin del viaje
+    // Fin del viaje: ejecutar callback, luego reveal suave, luego limpiar
     setTimeout(() => {
       onComplete();
-      // Pequeña pausa para que la transición a la próxima vista termine antes
-      // de remover el overlay (evita parpadeos).
+      // Pequeño wait para que el flash blanco esté en pleno (overlap visual)
       setTimeout(() => {
+        // 1. Freeze: el overlay aún cubre todo mientras swapeamos animaciones
+        //    Agregamos warp-reveal ANTES de remover warp-active para que no
+        //    haya frame en blanco entre una animación y la otra.
+        document.body.classList.add('warp-reveal');
         document.body.classList.remove('warp-active');
         document.body.classList.remove('warp-ending');
         overlay.remove();
-        warpInFlight = false;
-      }, 400);
+
+        // 2. Después de que el reveal-animation termine, limpiamos todo
+        setTimeout(() => {
+          document.body.classList.remove('warp-reveal');
+          warpInFlight = false;
+        }, 600); // ~duración de warpReveal (0.55s) + margen
+      }, 150);
     }, WARP_DURATION_MS);
   }
 

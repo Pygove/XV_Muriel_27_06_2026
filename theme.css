@@ -993,6 +993,28 @@ body.warp-active > :not(.warp-overlay) {
   100% { transform: scale(1.2);  filter: blur(6px) brightness(0.3); opacity: 0; }
 }
 
+/* Reveal suave del contenido después del viaje — se activa con `.warp-reveal` en body.
+   Más rápido y con opacidad como protagonista (la magia del fade-in). */
+body.warp-reveal > :not(.warp-overlay) {
+  animation: warpReveal 0.55s ease-out forwards;
+}
+
+@keyframes warpReveal {
+  0% {
+    transform: scale(1.04);
+    filter: blur(3px);
+    opacity: 0;
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    filter: blur(0);
+    opacity: 1;
+  }
+}
+
 /* Accesibilidad: reduced motion → desactivar viaje, dejar solo un fade rápido */
 @media (prefers-reduced-motion: reduce) {
   .warp-streak,
@@ -1004,5 +1026,120 @@ body.warp-active > :not(.warp-overlay) {
     animation: none !important;
     opacity: 0;
     transition: opacity 0.4s ease-out;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   OPTIMIZACIONES PARA MOBILE (especialmente Android)
+   Los `filter: drop-shadow()`, los box-shadow múltiples y los gradientes
+   animados son MUY costosos en GPU de teléfonos. En pantallas chicas
+   simplificamos sin perder la estética: menos efectos, animaciones más
+   livianas, y un puñado de capas en lugar de todas a la vez.
+   ═══════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 820px) {
+
+  /* ── Fondo: sacar drop-shadow y desactivar los drifts de las capas
+        secundarias (la profundidad principal del cielo se mantiene). ── */
+  .starry-bg {
+    filter: none;
+    animation: none; /* sin drift en la capa principal en mobile */
+  }
+  .starry-bg::before {
+    animation: twinkleMedium 8s ease-in-out infinite alternate; /* solo titileo, no drift */
+  }
+  .starry-bg::after {
+    filter: none;
+    animation: twinkleFast 5s ease-in-out infinite alternate;
+  }
+
+  /* ── Polvo dorado: una sola capa, sin drop-shadow ── */
+  .gold-particles::before {
+    filter: none;
+  }
+  .gold-particles::after {
+    display: none; /* segunda capa fuera para aliviar */
+  }
+
+  /* ── Campo de estrellas grandes (body::before): sin drop-shadow + sin drift,
+        solo titileo suave. ── */
+  body::before {
+    filter: none;
+    animation: skyFieldTwinkle 6s ease-in-out infinite;
+  }
+
+  /* ── Estrellas fugaces: dejamos solo body::after, sacamos las extra
+        (html::before/::after con cola dorada que llevan box-shadow + filtros). ── */
+  html::before,
+  html::after {
+    display: none;
+  }
+  body::after {
+    filter: none; /* sin doble drop-shadow */
+  }
+
+  /* ── Warp / viaje espacial: versión SUPER liviana para mobile ──
+        Cambios clave para Android:
+        · Overlay con color sólido (no radial-gradient — el browser repinta
+          el gradiente full-screen cada frame y se le cae el FPS).
+        · Streaks con background sólido en vez de linear-gradient
+          (cada streak es solo una línea fina dorada).
+        · Sin filter: drop-shadow ni blur (los más caros en GPU móvil).
+        · El contenido detrás del warp solo se hace fade (sin scale/blur
+          del page entero, que fuerza re-composición de capas grandes).
+        · Cada streak con translateZ(0) → capa GPU dedicada, animaciones
+          más fluidas y sin pintar en CPU. */
+
+  .warp-overlay {
+    background: rgba(8, 12, 32, 0.88); /* sólido en vez de radial-gradient */
+  }
+
+  .warp-streak {
+    width: 70px;
+    height: 1.5px;
+    background: rgba(248, 220, 160, 0.95); /* sólido en vez de gradient */
+    filter: none;
+    border-radius: 0;
+    will-change: transform;
+  }
+  .warp-streak.bright {
+    height: 2px;
+    background: #ffffff;
+    filter: none;
+  }
+
+  .warp-core {
+    /* Halo más simple */
+    background: radial-gradient(circle, #fff 0%, rgba(248, 220, 160, 0.7) 60%, transparent 90%);
+    filter: none;
+    box-shadow: 0 0 12px rgba(248, 220, 160, 0.8);
+  }
+
+  /* Animación del streak: usa translate3d para forzar capa GPU ── */
+  .warp-streak {
+    animation: warpStreakMobile var(--duration) cubic-bezier(0.45, 0, 0.85, 1) var(--delay) infinite;
+  }
+  @keyframes warpStreakMobile {
+    0%   { transform: rotate(var(--angle)) translate3d(0, 0, 0)         scaleX(0.2); opacity: 0; }
+    10%  { transform: rotate(var(--angle)) translate3d(3vmax, 0, 0)     scaleX(0.3); opacity: calc(0.5 * var(--depth)); }
+    100% { transform: rotate(var(--angle)) translate3d(var(--max-dist), 0, 0) scaleX(2.2); opacity: 1; }
+  }
+
+  /* Contenido detrás del warp: solo fade-out (sin scale ni blur ni brightness) */
+  body.warp-active > :not(.warp-overlay) {
+    animation: warpFadeOutMobile 1.4s ease-in forwards;
+  }
+  @keyframes warpFadeOutMobile {
+    0%   { opacity: 1; }
+    60%  { opacity: 0.4; }
+    100% { opacity: 0; }
+  }
+
+  /* Reveal: solo fade-in (sin scale ni blur) */
+  body.warp-reveal > :not(.warp-overlay) {
+    animation: warpFadeInMobile 0.45s ease-out forwards;
+  }
+  @keyframes warpFadeInMobile {
+    from { opacity: 0; }
+    to   { opacity: 1; }
   }
 }

@@ -835,3 +835,174 @@ h1, h2, h3, h4 {
   }
   body::before { opacity: 0.7; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   VIAJE POR LAS ESTRELLAS — "warp / hyperspace"
+   Efecto de cabina de nave espacial: estrellas que estallan desde el centro
+   y se alargan en estelas al acelerar. Se activa agregando la clase
+   `.warp-active` al <body> (lo hace theme-warp.js cuando se clickea el botón
+   de "Ingresar"). El overlay y los streaks se generan dinámicamente desde JS.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Contenedor full-screen del viaje. Lo crea el JS y vive sobre todo el resto.
+   Empieza visible (no usamos transition de opacity para evitar conflictos);
+   los streaks aparecen desde el centro animados por su propia keyframe. */
+.warp-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 1;
+  /* Túnel oscuro: viñeta hacia los bordes que enfatiza el punto de fuga central */
+  background:
+    radial-gradient(ellipse at center,
+      transparent 0%,
+      rgba(10, 22, 58, 0.35) 45%,
+      rgba(10, 22, 58, 0.85) 85%,
+      rgba(5, 8, 28, 0.95) 100%);
+  /* Pequeño fade-in via animation (más confiable que transition recién agregada) */
+  animation: warpOverlayFade 0.35s ease-out;
+}
+
+@keyframes warpOverlayFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Cada streak es una línea fina dorada con gradiente que va de transparente
+   (cola, junto al centro) a brillante (cabeza, hacia afuera). El anclaje en
+   transform-origin: 0% 50% permite rotar y trasladar hacia afuera de forma
+   radial desde el centro. */
+.warp-streak {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 90px;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(248, 220, 160, 0.0) 10%,
+    rgba(248, 220, 160, 0.55) 55%,
+    rgba(255, 245, 210, 0.95) 90%,
+    #ffffff 100%
+  );
+  border-radius: 2px;
+  transform-origin: 0% 50%;
+  filter: drop-shadow(0 0 4px rgba(248, 220, 160, 0.65));
+  /* Variables que setea el JS por streak — angle, delay, duration, depth */
+  --angle: 0deg;
+  --delay: 0s;
+  --duration: 1.6s;
+  --depth: 1;
+  --max-dist: 90vmax;
+  animation: warpStreak var(--duration) cubic-bezier(0.45, 0, 0.85, 1) var(--delay) infinite;
+  will-change: transform, opacity;
+}
+
+/* Algunas estrellas más brillantes (head bigger) y blancas para variar el cielo */
+.warp-streak.bright {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.0) 10%,
+    rgba(255, 245, 210, 0.7) 55%,
+    #ffffff 100%
+  );
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.9));
+  height: 3px;
+}
+
+/* Animación del streak:
+   · 0%: punto invisible en el centro
+   · 8%: aparece pequeño y empieza a moverse
+   · 100%: alcanza el borde, alargado y a máxima intensidad
+   La traslación se hace en el eje X local (que es radial gracias al rotate). */
+@keyframes warpStreak {
+  0% {
+    transform: rotate(var(--angle)) translateX(0) scaleX(0.15);
+    opacity: 0;
+  }
+  8% {
+    opacity: calc(0.35 * var(--depth));
+    transform: rotate(var(--angle)) translateX(4vmax) scaleX(0.25);
+  }
+  60% {
+    opacity: calc(0.85 * var(--depth));
+  }
+  100% {
+    transform: rotate(var(--angle)) translateX(var(--max-dist)) scaleX(2.6);
+    opacity: 1;
+  }
+}
+
+/* Punto de fuga: pequeño halo dorado pulsando en el centro mientras dura el viaje */
+.warp-core {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  margin: -6px 0 0 -6px;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    #ffffff 0%,
+    rgba(248, 220, 160, 0.9) 30%,
+    rgba(248, 220, 160, 0.3) 60%,
+    transparent 80%);
+  filter: blur(0.5px) drop-shadow(0 0 20px rgba(248, 220, 160, 0.8));
+  animation: warpCorePulse 1.4s ease-in-out infinite;
+}
+
+@keyframes warpCorePulse {
+  0%, 100% { transform: scale(0.6); opacity: 0.7; }
+  50%      { transform: scale(1.3); opacity: 1; }
+}
+
+/* Flash blanco al final del viaje (salir del warp). Se activa cuando JS pone
+   `.warp-ending` sobre el body durante el último ~250ms del efecto. */
+.warp-flash {
+  position: absolute;
+  inset: 0;
+  background: #ffffff;
+  opacity: 0;
+  pointer-events: none;
+}
+
+body.warp-ending .warp-flash {
+  animation: warpFlash 0.45s ease-out forwards;
+}
+
+@keyframes warpFlash {
+  0%   { opacity: 0; }
+  40%  { opacity: 0.92; }
+  100% { opacity: 0; }
+}
+
+/* Mientras el warp está activo, el contenido detrás se oscurece levemente
+   y se le aplica un sutil zoom para reforzar la sensación de aceleración. */
+body.warp-active > :not(.warp-overlay) {
+  animation: warpContentPush 1.6s cubic-bezier(0.5, 0, 0.9, 1) forwards;
+  pointer-events: none;
+}
+
+@keyframes warpContentPush {
+  0%   { transform: scale(1);    filter: blur(0) brightness(1); }
+  60%  { transform: scale(1.08); filter: blur(2px) brightness(0.6); }
+  100% { transform: scale(1.2);  filter: blur(6px) brightness(0.3); opacity: 0; }
+}
+
+/* Accesibilidad: reduced motion → desactivar viaje, dejar solo un fade rápido */
+@media (prefers-reduced-motion: reduce) {
+  .warp-streak,
+  .warp-core {
+    animation: none !important;
+    display: none !important;
+  }
+  body.warp-active > :not(.warp-overlay) {
+    animation: none !important;
+    opacity: 0;
+    transition: opacity 0.4s ease-out;
+  }
+}

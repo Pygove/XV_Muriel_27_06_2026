@@ -999,6 +999,14 @@ body.warp-reveal > :not(.warp-overlay) {
   animation: warpReveal 0.55s ease-out forwards;
 }
 
+/* Excepción: el `.entry-gate` NO debe re-animarse durante el reveal.
+   Nota: el ocultamiento real lo hace theme-warp.js vía inline style
+   (display:none), ya que las CSS animations tienen mayor prioridad de
+   cascade que !important y no se pueden bloquear solo con CSS. */
+body.warp-reveal .entry-gate {
+  display: none !important;
+}
+
 @keyframes warpReveal {
   0% {
     transform: scale(1.04);
@@ -1137,6 +1145,10 @@ body.warp-reveal > :not(.warp-overlay) {
   /* Reveal: solo fade-in (sin scale ni blur) */
   body.warp-reveal > :not(.warp-overlay) {
     animation: warpFadeInMobile 0.45s ease-out forwards;
+  }
+  /* Mismo override del entry-gate en mobile */
+  body.warp-reveal .entry-gate {
+    display: none !important;
   }
   @keyframes warpFadeInMobile {
     from { opacity: 0; }

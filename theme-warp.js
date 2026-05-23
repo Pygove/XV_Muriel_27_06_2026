@@ -123,19 +123,30 @@
       onComplete();
       // Pequeño wait para que el flash blanco esté en pleno (overlap visual)
       setTimeout(() => {
-        // 1. Freeze: el overlay aún cubre todo mientras swapeamos animaciones
-        //    Agregamos warp-reveal ANTES de remover warp-active para que no
-        //    haya frame en blanco entre una animación y la otra.
+        // 1. Ocultar el gate via JS (más confiable que CSS !important para este
+        //    caso, ya que CSS animations tienen mayor prioridad que !important
+        //    en la spec). El gate ya cumplió su función; lo sacamos del layout
+        //    antes de que arranque el reveal, para que solo se vea el countdown.
+        const gate = document.getElementById('entryGate')
+          || document.querySelector('.entry-gate');
+        if (gate) {
+          gate.style.setProperty('display', 'none', 'important');
+          gate.setAttribute('aria-hidden', 'true');
+        }
+
+        // 2. Swap de clases atómico: add warp-reveal + remove warp-active
+        //    en el mismo tick antes de repintar.
         document.body.classList.add('warp-reveal');
         document.body.classList.remove('warp-active');
         document.body.classList.remove('warp-ending');
         overlay.remove();
 
-        // 2. Después de que el reveal-animation termine, limpiamos todo
+        // 3. Después de que el reveal-animation termine, limpiamos todo.
+        //    NO restauramos display del gate — eso lo maneja app.js.
         setTimeout(() => {
           document.body.classList.remove('warp-reveal');
           warpInFlight = false;
-        }, 600); // ~duración de warpReveal (0.55s) + margen
+        }, 600);
       }, 150);
     }, WARP_DURATION_MS);
   }

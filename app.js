@@ -32,7 +32,7 @@ const CONFIG = {
   ],
 
   // Webhook de n8n (appendea cada submission a la planilla del evento)
-  webhookUrl: 'https://n8n.example.com/webhook/XXXXXXX',
+  webhookUrl: 'https://n8n.srv1189101.hstgr.cloud/webhook/ae3cacd0-d6d9-41f0-91a0-fcf94f2ae339',
   eventId: '1gJ-YxITbdFgRvR3wLK1NawutRI-7APLh8e1cCnIaOcY',
 
   // Dress code

@@ -1155,3 +1155,103 @@ body.warp-reveal .entry-gate {
     to   { opacity: 1; }
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ITINERARIO — Sendero de estrellas en zig-zag
+   Las 5 filas del cronograma se posicionan alternando lado (derecha / izquierda)
+   y se conectan por una polilínea dorada punteada que zigzaguea entre ellas.
+   Override decorativo del .schedule base (styles.css define el layout neutral).
+   ═══════════════════════════════════════════════════════════════════════════ */
+.schedule {
+  position: relative;
+  width: min(96vw, 380px);
+  aspect-ratio: 380 / 580;
+  margin: 2.2rem auto 1.2rem;
+  display: block;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 380 580' preserveAspectRatio='none'%3E%3Cpolyline points='248,46 132,162 248,278 132,394 248,510' fill='none' stroke='%23e6b85c' stroke-width='2.2' stroke-dasharray='2 8' stroke-linecap='round' stroke-linejoin='round' opacity='0.75'/%3E%3C/svg%3E");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  filter: drop-shadow(0 0 6px rgba(248, 220, 160, 0.35));
+}
+
+.schedule-row {
+  position: absolute;
+  width: 60%;
+  padding: 0 !important;
+  border-bottom: none !important;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  transform: translateY(-50%);
+}
+
+/* Vértices alternados — coinciden con la polilínea SVG */
+.schedule-row:nth-child(1) { top:  7.9%; right: 35%; align-items: flex-end;   text-align: right; }
+.schedule-row:nth-child(2) { top: 27.9%; left:  35%; align-items: flex-start; text-align: left;  }
+.schedule-row:nth-child(3) { top: 47.9%; right: 35%; align-items: flex-end;   text-align: right; }
+.schedule-row:nth-child(4) { top: 67.9%; left:  35%; align-items: flex-start; text-align: left;  }
+.schedule-row:nth-child(5) { top: 87.9%; right: 35%; align-items: flex-end;   text-align: right; }
+
+/* Estrella dorada de 4 puntas en cada vértice */
+.schedule-row::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 1.4rem;
+  height: 1.4rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpolygon points='10,0 12,8 20,10 12,12 10,20 8,12 0,10 8,8' fill='%23e6b85c'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  filter: drop-shadow(0 0 4px rgba(248, 220, 160, 0.8))
+          drop-shadow(0 0 10px rgba(230, 184, 92, 0.45));
+  transform: translateY(-50%);
+  animation: scheduleZigStarTwinkle 3.4s ease-in-out infinite;
+}
+.schedule-row:nth-child(odd)::before  { right: -1.8rem; }
+.schedule-row:nth-child(even)::before { left:  -1.8rem; }
+
+.schedule-row:nth-child(2)::before { animation-delay: 0.6s; }
+.schedule-row:nth-child(3)::before { animation-delay: 1.2s; }
+.schedule-row:nth-child(4)::before { animation-delay: 1.8s; }
+.schedule-row:nth-child(5)::before { animation-delay: 2.4s; }
+
+@keyframes scheduleZigStarTwinkle {
+  0%, 100% {
+    opacity: 1;
+    transform: translateY(-50%) scale(1) rotate(0deg);
+  }
+  50% {
+    opacity: 0.85;
+    transform: translateY(-50%) scale(1.18) rotate(12deg);
+  }
+}
+
+/* Tipografía dentro de cada nodo */
+.schedule-time {
+  min-width: 0 !important;
+  font-size: 1.5rem;
+  letter-spacing: 0.06em;
+  color: var(--accent-light);
+  text-shadow: 0 0 6px rgba(230, 184, 92, 0.35);
+}
+.schedule-event {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  line-height: 1.2;
+  color: var(--text);
+  letter-spacing: 0.02em;
+  padding: 0 0.4rem;
+}
+.schedule-row:nth-child(odd) .schedule-event  { padding-right: 0; }
+.schedule-row:nth-child(even) .schedule-event { padding-left: 0; }
+
+@media (max-width: 420px) {
+  .schedule-time  { font-size: 1.35rem; }
+  .schedule-event { font-size: 1.1rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .schedule-row::before { animation: none !important; }
+}

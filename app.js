@@ -36,7 +36,7 @@ const CONFIG = {
   eventId: '1gJ-YxITbdFgRvR3wLK1NawutRI-7APLh8e1cCnIaOcY',
 
   // Dress code
-  dresscode: 'Elegante',
+  dresscode: 'Elegante<br>Por favor evitar el color dorado, azul y sus tonalidades',
 
   // Regalos
   alias: 'Jolie - Bolívar 1912 casi Colón',
@@ -59,7 +59,8 @@ document.addEventListener('DOMContentLoaded', () => {
   set('footerDate',   CONFIG.fechaTexto);
   set('lugarSalon',   CONFIG.salon);
   set('lugarDir',     CONFIG.direccion);
-  set('dresscodeText', CONFIG.dresscode);
+  const dresscodeEl = document.getElementById('dresscodeText');
+  if (dresscodeEl) dresscodeEl.innerHTML = CONFIG.dresscode;
   set('regalosAlias', CONFIG.alias);
   set('regalosCbu',   CONFIG.cbu);
   set('regalosBanco', CONFIG.banco);
